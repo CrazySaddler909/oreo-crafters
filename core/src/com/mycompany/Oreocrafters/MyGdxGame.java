@@ -162,6 +162,8 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 	@Override
 	public void render() {
 		
+		super.render();
+		
 		// Clear Screen 
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

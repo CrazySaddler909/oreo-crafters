@@ -18,13 +18,13 @@
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<locationURI>copy_PARENT/android/assets</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/android/assets</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
 			<name>copy_PARENT</name>
-			<value>$%7BPARENT-2-PROJECT_LOC%7D/git/oreo-crafters</value>
+			<value>file:/C:/Users/A180906/git</value>
 		</variable>
 	</variableList>
 </projectDescription>
