@@ -5,6 +5,7 @@ public class GameMenu {
 	public void setSize(int i, int j) {
 		// TODO Auto-generated method stub
 		
+		System.out.println("test");
 	}
 
 	public void setLocation(int i, int j) {
