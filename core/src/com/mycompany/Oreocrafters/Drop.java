@@ -43,7 +43,7 @@ private Rectangle bucket;
 		batch = new SpriteBatch();
         //Use LibGDX's default Arial font.
         font = new BitmapFont();
-        this.setScreen(new MainMenuScreen(this));
+       /////////// this.setScreen(new MainMenuScreen(this));
 		
 		// load the images for the droplet and the bucket, 64x64 pixels each
 		dropImage = new Texture(Gdx.files.internal("walsall.jpg"));

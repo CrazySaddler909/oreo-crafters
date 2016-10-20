@@ -1,14 +1,12 @@
 package com.mycompany.Oreocrafters;
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.Graphics2D;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
+import com.mycompany.Oreocrafters.sprites.PlayerTexture;
+import com.mycompany.Oreocrafters.sprites.PlayerSprite;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
@@ -16,11 +14,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -28,28 +26,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-@SuppressWarnings("unused")
-public class MyGdxGame<Background> extends ApplicationAdapter implements ApplicationListener {
-	
+public class MyGdxGame<Background> extends ApplicationAdapter implements ApplicationListener,Runnable {
 
-//  {
-//  		this.resize(Height+250, Width+250);
-//  }
+
+ //{  
+ // 		this.resize(HEIGHT+250, WIDTH+250);
+ // }
 	
 	/**
 	 * OreoCrafters fields.
 	 */
-	private static final int Width = 0;
-	private static final int Height = 0;
-	private Object add;
+   // private static final int HEIGHT = 250;
+   // private static final int WIDTH = 250;
 	private Rectangle bucket;
 	private OrthographicCamera camera;
-	private Texture bucketImage;
-	private BitmapFont font2;
+	private Texture player;
 	private SpriteBatch batch1;
     private BitmapFont font;
     private SpriteBatch batch;
-    private Socket socket;
+    private Thread thread = new Thread();
+    private boolean running = false;
+    private Texture PlayerTexture;
+    private Sprite PlayerSprite;
+    
 	TextureRegion upRegion;
 	TextureRegion downRegion;
 	Texture texture;
@@ -57,41 +56,21 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 	Game game;
 	Stage stage;
 	
-		
-	/**
-	 * You Tube Tutorial fields.
-	 */
-	static int java = 13;
-	static int python = 3;
-	static int ruby = java * python;
-	byte CSS= 123;
-	short PHP =(short) 32000;
-	int HTML = 2000000;
-	long  HTML5 = 1234567l;
-	float XML = 43.2F;
-	double Cplusplus = 123456.7;
-	char Chashthag = '@'; 
-	static boolean C = true;
-	
 	public MyGdxGame<Background> Game() {
 		MyGdxGame<Background> instance = this;
 		return(instance);
 	}
 		
-	@Override
 	public void create() {
 		
-		bucketImage = new Texture(Gdx.files.internal("bucket.jpg"));
+		bucket = new Rectangle();
+		player = new Texture(Gdx.files.internal("player.png"));
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		   
 		batch = new SpriteBatch();
 		
-		bucket = new Rectangle();
-		bucket.x = 800 / 2 - 64 / 2;
-		bucket.y = 20;
-		bucket.width = 64;
-		bucket.height = 64;
+		
 		
 		
 		/**
@@ -103,21 +82,19 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 		String locRoot = Gdx.files.getLocalStoragePath();
 		System.out.println(extRoot);
 		System.out.println(locRoot);
-	
-		System.out.println("Scanner");
 		
-		texture = new Texture(Gdx.files.internal("background3.png"));
+		texture = new Texture(Gdx.files.internal("Bro.png"));
 		batch1 = new SpriteBatch();
 		
 		 // Texture
 		Texture texture2 = new Texture(Gdx.files.internal("Button.png"));
 		
-		//		font.setColor(Color.PINK);
+		//font.setColor(Color.PINK);
 		
-		// Music
-		//oreo1 = Gdx.audio.newMusic(Gdx.files.internal("oreo1.ogg"));
-		//oreo1.setLooping(true);
-		//oreo1.play();
+		 Music
+		oreo1 = Gdx.audio.newMusic(Gdx.files.internal("oreo1.ogg"));
+		oreo1.setLooping(true);
+		oreo1.play();
 		
 //		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 //		Skin skin = new Skin();
@@ -145,11 +122,6 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 	    		stage2.cancelTouchFocus(null);
 	    		Gdx.input.setInputProcessor(stage2);
 	        }
-
-			private void setBackground() {
-				// TODO Auto-generated method stub
-				
-			}
 	        
 	    });
 				
@@ -159,7 +131,6 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 		Gdx.input.setInputProcessor(stage);
 	}
 	
-	@Override
 	public void render() {
 		
 		super.render();
@@ -175,41 +146,39 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 		stage.draw();
 
 		font = new BitmapFont();  
-		
-        font2 = null;
 
         Gdx.graphics.setTitle("Oro Crafters 1.1");
-     // Create the bucket Image
-     		batch.setProjectionMatrix(camera.combined);
-     		batch.begin();
-     		batch.draw(bucketImage, bucket.x, bucket.y);
-     		batch.end();
-     		
-     // Moves bucket if Mouse used
-     		if(Gdx.input.isTouched()) {
-     			Vector3 touchPos = new Vector3();
-     			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-     			camera.unproject(touchPos);
-     			bucket.x = touchPos.x - 64 / 2;
-     		}
-     		
-     		// Moves bucket if the left right keys are pressed
-     		if(Gdx.input.isKeyPressed(Keys.A)) bucket.x -= 200 * Gdx.graphics.getDeltaTime();
-     		if(Gdx.input.isKeyPressed(Keys.D)) bucket.x += 200 * Gdx.graphics.getDeltaTime();
-     		// Stop bucket going off screen
-     		if(bucket.x < 0) bucket.x = 0;
-     		if(bucket.x > 800 - 64) bucket.x = 800 - 64;
-     		// Moves bucket if up down keys pressed.
-     		if(Gdx.input.isKeyPressed(Keys.S)) bucket.y -= 200 * Gdx.graphics.getDeltaTime();
-     		if(Gdx.input.isKeyPressed(Keys.W)) bucket.y += 200 * Gdx.graphics.getDeltaTime();
-     	    //If movement is working it says it in the console.
-     		System.out.println("Move work");
-     		// FIXME Bucket goes off screen
-     		if(bucket.x < 0) bucket.y = 0;
-     		if(bucket.x > 800 - 64) bucket.y = 64 - 800;
-        
+    	// Create the bucket Image
+ 		batch.setProjectionMatrix(camera.combined);
+ 		batch.begin();
+ 		batch.draw(player, bucket.x, bucket.y);
+ 		batch.end();
+ 		
+    	// Moves bucket if Mouse used
+ 		if(Gdx.input.isTouched()) {
+ 			Vector3 touchPos = new Vector3();
+ 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+ 			camera.unproject(touchPos);
+ 			bucket.x = touchPos.x - 64 / 2;      
+ 		}
+ 		
+ 		// Moves bucket if the left right keys are pressed
+ 		if(Gdx.input.isKeyPressed(Keys.A)) bucket.x -= 200 * Gdx.graphics.getDeltaTime();
+ 		if(Gdx.input.isKeyPressed(Keys.D)) bucket.x += 200 * Gdx.graphics.getDeltaTime();
+ 		// Stop bucket going off screen
+ 		if(bucket.x < 0) bucket.x = 0;
+ 		if(bucket.x > 800 - 64) bucket.x = 800 - 64;
+ 		// Moves bucket if up down keys pressed.
+ 		if(Gdx.input.isKeyPressed(Keys.S)) bucket.y -= 200 * Gdx.graphics.getDeltaTime();
+ 		if(Gdx.input.isKeyPressed(Keys.W)) bucket.y += 200 * Gdx.graphics.getDeltaTime();
+ 	    // If movement is working it says it in the console.
+ 		//System.out.println("Move work");
+ 		// FIXME Bucket goes off screen
+ 		if(bucket.x < 0) bucket.y = 0;
+ 		if(bucket.x > 800 - 64) bucket.y = 64 - 800;  float deltaTime = Gdx.graphics.getDeltaTime();
 	}
-	
+ 	  
+
 	public void dispose () {
 		
 		 batch1.dispose();
@@ -227,62 +196,37 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 		}
 		
 	}
-	
-	public int getsize() {
-		return 0;
-		
-	}
-	public void init() {     
-	
-	}
 
-	public void start () {
-		
-	    C = false;
-       
-	}
-	
-	public void end () {
-		
-	}
-	
 	public void show () {
 		Gdx.input.setInputProcessor(stage);		
 	}
 	
-	private void setResizable(boolean c2) {
-				
-	}
-	
-	private void add(JPanel panel2) {
-					
-	}
-	
-	private void setLayout(Object object) {
-				
-	}
-	
-	private void addKeyListener(MyGdxGame<Background> myGdxGame) {
-					
-	}
-	
-	private void setFocusable(boolean c2) {
-	
-	}
-	
-	/**
-	 * The MAIN method.
-	 * @param args
-	 */
-	
-	public static void main(String args[]) {
+	public void Graphics(Graphics2D g) {
 		
-	    System.out.println("works :)");	
-		System.out.println(C);
-		launch(args);
 	}
 
-	private static void launch(String[] args) {
+	public void run() {
+		while (running) {
+			System.out.println("Running!");
+			thread.start();
+			
+		}
 		
 	}
+		
+		
+		public synchronized void stop() {
+		running = false;
+		try {
+			thread.stop();
+		}catch (Exception e) {
+			System.out.println("Thread stoped");
+		}
+	}
+		
+		public synchronized void start() {
+        running = true;
+        thread.start();
+}
+		
 }
