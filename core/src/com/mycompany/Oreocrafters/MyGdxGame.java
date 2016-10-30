@@ -5,8 +5,6 @@ import java.awt.Graphics2D;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
-import com.mycompany.Oreocrafters.sprites.PlayerTexture;
-import com.mycompany.Oreocrafters.sprites.PlayerSprite;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
@@ -14,7 +12,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -26,19 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-public class MyGdxGame<Background> extends ApplicationAdapter implements ApplicationListener,Runnable {
-
-
- //{  
- // 		this.resize(HEIGHT+250, WIDTH+250);
- // }
+public class MyGdxGame extends ApplicationAdapter implements ApplicationListener,Runnable {
 	
-	/**
-	 * OreoCrafters fields.
-	 */
-   // private static final int HEIGHT = 250;
-   // private static final int WIDTH = 250;
+	
+  //OreoCrafters fields.
+	 
 	private Rectangle bucket;
+	
 	private OrthographicCamera camera;
 	private Texture player;
 	private SpriteBatch batch1;
@@ -46,32 +37,23 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
     private SpriteBatch batch;
     private Thread thread = new Thread();
     private boolean running = false;
-    private Texture PlayerTexture;
-    private Sprite PlayerSprite;
-    
+        
 	TextureRegion upRegion;
 	TextureRegion downRegion;
 	Texture texture;
 	Music oreo1;
 	Game game;
 	Stage stage;
-	
-	public MyGdxGame<Background> Game() {
-		MyGdxGame<Background> instance = this;
-		return(instance);
-	}
-		
+
+	@Override
 	public void create() {
-		
+
 		bucket = new Rectangle();
 		player = new Texture(Gdx.files.internal("player.png"));
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		   
 		batch = new SpriteBatch();
-		
-		
-		
 		
 		/**
 		 * OREO CRAFTERS
@@ -88,9 +70,7 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 		
 		 // Texture
 		Texture texture2 = new Texture(Gdx.files.internal("Button.png"));
-		
-		//font.setColor(Color.PINK);
-		
+				
 		 Music
 		oreo1 = Gdx.audio.newMusic(Gdx.files.internal("oreo1.ogg"));
 		oreo1.setLooping(true);
@@ -115,10 +95,11 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 	        @Override 
 	        public void changed (ChangeEvent event, Actor actor) {
 	            System.out.println("Button Pressed");
-	//          button.setChecked(true);
-//	    		texture = new Texture(Gdx.files.internal("walsall.jpg"));
+	            System.out.println("Button Realsed");
+                //button.setChecked(true);
+                //texture = new Texture(Gdx.files.internal("walsall.jpg"));
 	            Stage stage2 = new Stage();
-//	    		stage2.addActor(button);
+         		//stage2.addActor(button);
 	    		stage2.cancelTouchFocus(null);
 	    		Gdx.input.setInputProcessor(stage2);
 	        }
@@ -131,6 +112,7 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 		Gdx.input.setInputProcessor(stage);
 	}
 	
+	@Override
 	public void render() {
 		
 		super.render();
@@ -175,7 +157,8 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
  		//System.out.println("Move work");
  		// FIXME Bucket goes off screen
  		if(bucket.x < 0) bucket.y = 0;
- 		if(bucket.x > 800 - 64) bucket.y = 64 - 800;  float deltaTime = Gdx.graphics.getDeltaTime();
+ 		if(bucket.x > 800 - 64) bucket.y = 64 - 800;
+		 		
 	}
  	  
 
@@ -214,8 +197,7 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
 		
 	}
 		
-		
-		public synchronized void stop() {
+    public synchronized void stop() {
 		running = false;
 		try {
 			thread.stop();
@@ -228,5 +210,13 @@ public class MyGdxGame<Background> extends ApplicationAdapter implements Applica
         running = true;
         thread.start();
 }
+
+		@Override
+		    public void pause() {			
+		    }
+
+		    @Override
+		    public void resume() {
+		    }
+		}
 		
-}
