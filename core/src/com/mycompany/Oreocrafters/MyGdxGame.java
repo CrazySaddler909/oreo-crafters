@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-public class MyGdxGame extends ApplicationAdapter implements ApplicationListener,Runnable {
+public class MyGdxGame extends ApplicationAdapter implements ApplicationListener  {
 	
 	
   //OreoCrafters fields.
@@ -35,83 +35,82 @@ public class MyGdxGame extends ApplicationAdapter implements ApplicationListener
 	private SpriteBatch batch1;
     private BitmapFont font;
     private SpriteBatch batch;
-    private Thread thread = new Thread();
-    private boolean running = false;
+
         
 	TextureRegion upRegion;
 	TextureRegion downRegion;
 	Texture texture;
 	Music oreo1;
+	@Override
+		public void create() {
+			
+			bucket = new Rectangle();
+			player = new Texture(Gdx.files.internal("player.png"));
+			camera = new OrthographicCamera();
+			camera.setToOrtho(false, 800, 480);
+			   
+			batch = new SpriteBatch();
+			
+			/**
+			 * OREO CRAFTERS
+			 */
+			
+			// Texture
+			String extRoot = Gdx.files.getExternalStoragePath();
+			String locRoot = Gdx.files.getLocalStoragePath();
+			System.out.println(extRoot);
+			System.out.println(locRoot);
+			
+			texture = new Texture(Gdx.files.internal("Bro.png"));
+			batch1 = new SpriteBatch();
+			
+			 // Texture
+			Texture texture2 = new Texture(Gdx.files.internal("Button.png"));
+					
+			Music
+			oreo1 = Gdx.audio.newMusic(Gdx.files.internal("oreo1.ogg"));
+			oreo1.setLooping(true);
+			oreo1.play();
+			
+	//		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+	//		Skin skin = new Skin();
+			
+			
+			TextureRegion upRegion = new TextureRegion(texture, 120, 120, 150, 150);
+			TextureRegion downRegion = new TextureRegion(texture2, 120, 120, 150, 150);
+			BitmapFont buttonFont = new BitmapFont();
+	
+			TextButtonStyle style = new TextButtonStyle();
+			style.up = new TextureRegionDrawable(upRegion);
+			style.down = new TextureRegionDrawable(downRegion);
+			style.font = buttonFont;
+			
+			final TextButton button = new TextButton("Play Game", style);
+			button.getStyle().checked = button.getStyle().up;
+			button.addListener(new ChangeListener() {
+		        @Override 
+		        public void changed (ChangeEvent event, Actor actor) {
+		            System.out.println("Button Pressed");
+		            System.out.println("Button Realsed");
+	                //button.setChecked(true);
+	                //texture = new Texture(Gdx.files.internal("walsall.jpg"));
+		            Stage stage2 = new Stage();
+	         		//stage2.addActor(button);
+		    		stage2.cancelTouchFocus(null);
+		    		Gdx.input.setInputProcessor(stage2);
+		        }
+		        
+		    });
+					
+			stage = new Stage();
+			stage.addActor(button);
+			stage.cancelTouchFocus(null);
+			Gdx.input.setInputProcessor(stage);
+		}
+
 	Game game;
 	Stage stage;
 
-	@Override
-	public void create() {
-
-		bucket = new Rectangle();
-		player = new Texture(Gdx.files.internal("player.png"));
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
-		   
-		batch = new SpriteBatch();
-		
-		/**
-		 * OREO CRAFTERS
-		 */
-		
-		// Texture
-		String extRoot = Gdx.files.getExternalStoragePath();
-		String locRoot = Gdx.files.getLocalStoragePath();
-		System.out.println(extRoot);
-		System.out.println(locRoot);
-		
-		texture = new Texture(Gdx.files.internal("Bro.png"));
-		batch1 = new SpriteBatch();
-		
-		 // Texture
-		Texture texture2 = new Texture(Gdx.files.internal("Button.png"));
-				
-		 Music
-		oreo1 = Gdx.audio.newMusic(Gdx.files.internal("oreo1.ogg"));
-		oreo1.setLooping(true);
-		oreo1.play();
-		
-//		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-//		Skin skin = new Skin();
-		
-		
-		TextureRegion upRegion = new TextureRegion(texture, 120, 120, 150, 150);
-		TextureRegion downRegion = new TextureRegion(texture2, 120, 120, 150, 150);
-		BitmapFont buttonFont = new BitmapFont();
-
-		TextButtonStyle style = new TextButtonStyle();
-		style.up = new TextureRegionDrawable(upRegion);
-		style.down = new TextureRegionDrawable(downRegion);
-		style.font = buttonFont;
-		
-		final TextButton button = new TextButton("Play Game", style);
-		button.getStyle().checked = button.getStyle().up;
-		button.addListener(new ChangeListener() {
-	        @Override 
-	        public void changed (ChangeEvent event, Actor actor) {
-	            System.out.println("Button Pressed");
-	            System.out.println("Button Realsed");
-                //button.setChecked(true);
-                //texture = new Texture(Gdx.files.internal("walsall.jpg"));
-	            Stage stage2 = new Stage();
-         		//stage2.addActor(button);
-	    		stage2.cancelTouchFocus(null);
-	    		Gdx.input.setInputProcessor(stage2);
-	        }
-	        
-	    });
-				
-		stage = new Stage();
-		stage.addActor(button);
-		stage.cancelTouchFocus(null);
-		Gdx.input.setInputProcessor(stage);
-	}
-	
 	@Override
 	public void render() {
 		
@@ -187,36 +186,15 @@ public class MyGdxGame extends ApplicationAdapter implements ApplicationListener
 	public void Graphics(Graphics2D g) {
 		
 	}
-
-	public void run() {
-		while (running) {
-			System.out.println("Running!");
-			thread.start();
-			
-		}
-		
-	}
-		
-    public synchronized void stop() {
-		running = false;
-		try {
-			thread.stop();
-		}catch (Exception e) {
-			System.out.println("Thread stoped");
-		}
-	}
-		
-		public synchronized void start() {
-        running = true;
-        thread.start();
-}
-
+	
 		@Override
-		    public void pause() {			
+		    public void pause(){	
+			
 		    }
 
 		    @Override
 		    public void resume() {
+		    	
 		    }
+		    
 		}
-		

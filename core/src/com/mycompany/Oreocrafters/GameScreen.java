@@ -133,32 +133,20 @@ public class GameScreen implements Screen {
         }
     }
 
-	public void show() {
-		// TODO Auto-generated method stub
-		
+	public void show() {		
 	}
 
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
 	}
 
-	public void pause() {
-		// TODO Auto-generated method stub
-		
+	public void pause() {		
 	}
 
-	public void resume() {
-		// TODO Auto-generated method stub
-		
+	public void resume() {		
 	}
 
-	public void hide() {
-		// TODO Auto-generated method stub
-		
+	public void hide() {		
 	}
 
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
+	public void dispose() {		
 	} }

@@ -69,9 +69,7 @@ private Rectangle bucket;
 		bucket.height = 64;
 	}
 
-	public void setScreen(Screen mainMenuScreen) {
-		// TODO Auto-generated method stub
-		
+	public void setScreen(Screen mainMenuScreen) {		
 	}
 
 	@Override
